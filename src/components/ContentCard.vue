@@ -1,27 +1,31 @@
 <template>
-  <div
-    class="
-      content-card
-      p-2
-      text-center
-      d-flex
-      flex-column
-      justify-content-between
-      align-items-center
-    "
-    :style="backgroundImageInlineStyle"
-  >
-    <div class="movie-info d-none">
-      <h3 class="text-danger">{{ content.title || content.name }}</h3>
-      <h4>{{ content.original_title || content.original_name }}</h4>
-      <img
-        v-if="hasFlag"
-        :src="require(`../assets/img/${content.original_language}.png`)"
-        :alt="content.original_language"
-        class="flag"
-      />
-      <span v-else>{{ content.original_language }}</span>
-      <span>{{ getVote }}</span>
+  <div class="content-card" :style="backgroundImageInlineStyle">
+    <div
+      class="
+        content-info
+        flex-column
+        justify-content-between
+        align-items-start
+        h-100
+      "
+    >
+      <span><strong>Titolo:</strong> {{ content.title || content.name }}</span>
+      <span>
+        <strong>Titolo Originale:</strong>
+        {{ content.original_title || content.original_name }}
+      </span>
+      <div>
+        <strong>Lingua:</strong>
+        <img
+          v-if="hasFlag"
+          :src="require(`../assets/img/${content.original_language}.png`)"
+          :alt="content.original_language"
+          class="flag ms-1"
+        />
+        <span v-else class="ms-1">{{ content.original_language }}</span>
+      </div>
+      <span><strong>Voto:</strong> {{ getVote }}</span>
+      <span><strong>Overview:</strong> {{ content.overview }}</span>
     </div>
   </div>
 </template>
@@ -57,7 +61,7 @@ export default {
 .content-card {
   margin: 20px;
   flex-basis: calc(100% / 5 - 40px);
-  min-height: 350px;
+  height: 350px;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -65,7 +69,17 @@ export default {
   color: white;
   border: 0.2px solid white;
   box-shadow: 0px 5px 8px black;
+  cursor: pointer;
 
+  .content-info {
+    display: none;
+  }
+  &:hover .content-info {
+    display: flex;
+    background-color: black;
+    overflow-y: auto;
+    padding: 5px;
+  }
   .flag {
     width: 40px;
   }
