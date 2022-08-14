@@ -1,15 +1,10 @@
 <template>
   <div class="content-card" :style="backgroundImageInlineStyle">
-    <div
-      class="
-        content-info
-        flex-column
-        justify-content-between
-        align-items-start
-        h-100
-      "
-    >
-      <span><strong>Titolo:</strong> {{ content.title || content.name }}</span>
+    <div class="content-info">
+      <span>
+        <strong>Titolo:</strong>
+        {{ content.title || content.name }}
+      </span>
       <span>
         <strong>Titolo Originale:</strong>
         {{ content.original_title || content.original_name }}
@@ -24,8 +19,16 @@
         />
         <span v-else class="ms-1">{{ content.original_language }}</span>
       </div>
-      <span><strong>Voto:</strong> {{ getVote }}</span>
-      <span><strong>Overview:</strong> {{ content.overview }}</span>
+      <span>
+        <strong>Voto:</strong>
+        <ul>
+          <li v-for="star in voteStars" :key="star">{{ star }}</li>
+        </ul>
+      </span>
+      <span>
+        <strong>Overview:</strong>
+        {{ content.overview }}
+      </span>
     </div>
   </div>
 </template>
@@ -38,6 +41,10 @@ export default {
     content: Object,
   },
 
+  data() {
+    return {};
+  },
+
   computed: {
     backgroundImageInlineStyle() {
       const baseUri = "https://image.tmdb.org/t/p/";
@@ -45,13 +52,26 @@ export default {
     },
 
     hasFlag() {
-      const flags = ["it", "en"];
+      const flags = ["it", "en", "es", "ja", "fr", "de"];
       return flags.includes(this.content.original_language);
     },
 
-    getVote() {
-      const vote = this.content.vote_average / 2;
-      return Math.ceil(vote);
+    voteStars() {
+      const voteStars = [];
+      const vote = Math.ceil(this.content.vote_average / 2);
+      const totalStars = 5;
+      const emptyStars = totalStars - vote;
+      const fullStar = '<font-awesome-icon icon="fa-solid fa-star" />';
+      const emptyStar = '<font-awesome-icon icon="fa-regular fa-star" />';
+
+      for (let i = 1; i <= vote; i++) {
+        voteStars.push(fullStar);
+      }
+      for (let i = 1; i <= emptyStars; i++) {
+        voteStars.push(emptyStar);
+      }
+
+      return voteStars;
     },
   },
 };
@@ -73,15 +93,26 @@ export default {
 
   .content-info {
     display: none;
+
+    ul {
+      list-style-type: none;
+      // display: flex;
+    }
   }
   &:hover .content-info {
+    height: 100%;
     display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
     background-color: black;
-    overflow-y: auto;
     padding: 5px;
+    overflow-y: scroll;
+    text-align: start;
   }
   .flag {
-    width: 40px;
+    width: 30px;
+    height: 20px;
   }
 }
 </style>
