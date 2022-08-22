@@ -19,12 +19,10 @@
         />
         <span v-else class="ms-1">{{ content.original_language }}</span>
       </div>
-      <span>
+      <div>
         <strong>Voto:</strong>
-        <ul>
-          <li v-for="star in voteStars" :key="star">{{ star }}</li>
-        </ul>
-      </span>
+        <FontAwesomeIcon v-for="n in 5" :key="n" :icon="renderStar(n)" />
+      </div>
       <span>
         <strong>Overview:</strong>
         {{ content.overview }}
@@ -47,8 +45,8 @@ export default {
 
   computed: {
     backgroundImageInlineStyle() {
-      const baseUri = "https://image.tmdb.org/t/p/";
-      return `background-image: url("${baseUri}w342${this.content.poster_path}")`;
+      const baseUrl = "https://image.tmdb.org/t/p/";
+      return `background-image: url("${baseUrl}w342${this.content.poster_path}")`;
     },
 
     hasFlag() {
@@ -56,22 +54,14 @@ export default {
       return flags.includes(this.content.original_language);
     },
 
-    voteStars() {
-      const voteStars = [];
-      const vote = Math.ceil(this.content.vote_average / 2);
-      const totalStars = 5;
-      const emptyStars = totalStars - vote;
-      const fullStar = '<font-awesome-icon icon="fa-solid fa-star" />';
-      const emptyStar = '<font-awesome-icon icon="fa-regular fa-star" />';
-
-      for (let i = 1; i <= vote; i++) {
-        voteStars.push(fullStar);
-      }
-      for (let i = 1; i <= emptyStars; i++) {
-        voteStars.push(emptyStar);
-      }
-
-      return voteStars;
+    vote() {
+      return Math.ceil(this.content.vote_average / 2);
+    },
+  },
+  methods: {
+    renderStar(n) {
+      const iconType = this.vote >= n ? "fa-solid" : "fa-regular";
+      return iconType + " fa-star";
     },
   },
 };
